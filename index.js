@@ -9,15 +9,16 @@ const app = express()
 
 const server = new createServer(app)
 
+app.use(cors())
+
 const io = new Server(server, {
     cors: {
-        origin: "https://basic-chat-fe.vercel.app/",
+        origin: "https://basic-chat-fe.vercel.app",
         methods: ["GET", "POST"],
         credentials: true
     }
 })
 
-app.use(cors())
 app.get('/', (req, res) => {
     res.send("Hello World!")
 })
