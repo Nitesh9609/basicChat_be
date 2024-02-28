@@ -9,11 +9,10 @@ const app = express()
 
 const server = new createServer(app)
 
-app.use(cors())
 
 const io = new Server(server, {
     cors: {
-        origin: "https://basic-chat-fe.vercel.app",
+        origin: "http://localhost:5173",
         methods: ["GET", "POST"],
         credentials: true
     }
@@ -23,15 +22,17 @@ app.get('/', (req, res) => {
     res.send("Hello World!")
 })
 
+app.use(cors())
+
 let onlineUsers = []
 io.on('connection', socket => {
     console.log(socket.id + " connected");
     // When the client sends a message to the server using socket.emit(), this event is triggered on the server side
-    console.log("online user",onlineUsers);
-
+    
     socket.on('userName', (data) => {
-
+        
         onlineUsers.push({ userName: data, socketId: socket.id })
+        console.log("online user",onlineUsers);
         io.emit('user_connected', onlineUsers);
     })
 
@@ -42,6 +43,7 @@ io.on('connection', socket => {
     })
 
     socket.on('join-room', (room) => {
+        console.log(`room joined by ${room}`);
         socket.join(room)
     })
 
